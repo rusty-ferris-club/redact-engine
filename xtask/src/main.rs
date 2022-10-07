@@ -102,7 +102,7 @@ fn main() -> Result<(), anyhow::Error> {
             Ok(())
         }
         Some(("fmt", _)) => {
-            cmd!("cargo", "+nightly", "fmt", "--all", "--", "--check").run()?;
+            cmd!("cargo", "fmt", "--all", "--", "--check").run()?;
             Ok(())
         }
         Some(("clippy", _)) => {
