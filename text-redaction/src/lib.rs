@@ -1,7 +1,6 @@
 //! > **Redact text**
 //!
 //! ## Usage
-#![doc = include_str!("../examples/redaction_string.rs")]
 //!
 //! ## Example
 //!

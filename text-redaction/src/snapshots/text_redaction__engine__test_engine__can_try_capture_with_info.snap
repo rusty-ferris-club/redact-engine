@@ -1,5 +1,5 @@
 ---
-source: src/engine.rs
+source: text-redaction/src/engine.rs
 expression: "try_capture(TEXT, &Regex::new(\"(foo)\").unwrap(), 1, true)"
 ---
 [

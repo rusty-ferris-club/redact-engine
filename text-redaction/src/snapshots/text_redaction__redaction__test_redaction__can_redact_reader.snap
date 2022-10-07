@@ -1,5 +1,5 @@
 ---
-source: src/redaction.rs
+source: text-redaction/src/redaction.rs
 expression: "redaction.redact_reader(File::open(file_path).unwrap())"
 ---
 Ok(

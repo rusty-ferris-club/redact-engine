@@ -69,10 +69,11 @@ impl Redaction {
     /// # Examples
     ///
     /// ```rust
-    /// # use text_redaction::Redaction;
+    /// # use text_redaction::{Redaction, Pattern};
+    /// # use regex::Regex;
     /// let text = "foo,bar";
     /// let pattern = Pattern {
-    ///    test: Regex::new("(bar)")?,
+    ///    test: Regex::new("(bar)").unwrap(),
     ///    group: 1,
     /// };
     ///
@@ -90,10 +91,11 @@ impl Redaction {
     /// # Examples
     ///
     /// ```rust
-    /// # use text_redaction::Redaction;
+    /// # use text_redaction::{Redaction, Pattern};
+    /// # use regex::Regex;
     /// let text = "foo,bar";
     /// let pattern = Pattern {
-    ///    test: Regex::new("(bar)")?,
+    ///    test: Regex::new("(bar)").unwrap(),
     ///    group: 1,
     /// };
     ///
