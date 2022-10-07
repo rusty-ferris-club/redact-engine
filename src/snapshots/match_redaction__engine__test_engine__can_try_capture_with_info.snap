@@ -1,0 +1,26 @@
+---
+source: src/engine.rs
+expression: "try_capture(TEXT, &Regex::new(\"(foo)\").unwrap(), 1, true)"
+---
+[
+    (
+        "foo",
+        Some(
+            Position {
+                line_number: 1,
+                start_offset: 0,
+                end_offset: 3,
+            },
+        ),
+    ),
+    (
+        "foo",
+        Some(
+            Position {
+                line_number: 1,
+                start_offset: 12,
+                end_offset: 15,
+            },
+        ),
+    ),
+]

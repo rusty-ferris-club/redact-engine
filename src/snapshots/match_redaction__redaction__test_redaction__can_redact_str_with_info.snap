@@ -1,0 +1,16 @@
+---
+source: src/redaction.rs
+expression: redaction.redact_str_with_info(TEXT)
+---
+Info {
+    string: "foo,[TEXT_REDACTED],baz",
+    captures: [
+        Captures {
+            position: Position {
+                line_number: 1,
+                start_offset: 4,
+                end_offset: 7,
+            },
+        },
+    ],
+}

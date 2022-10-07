@@ -1,0 +1,5 @@
+---
+source: src/redaction.rs
+expression: redaction.redact_str(TEXT)
+---
+"foo,[TEXT_REDACTED],[TEXT_REDACTED]"
