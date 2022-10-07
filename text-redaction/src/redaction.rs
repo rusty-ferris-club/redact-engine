@@ -191,10 +191,10 @@ impl Redaction {
 #[cfg(test)]
 mod test_redaction {
 
-    use regex::Regex;
     use std::{env, fs::File, io::Write};
 
     use insta::assert_debug_snapshot;
+    use regex::Regex;
 
     use super::*;
 
