@@ -7,9 +7,7 @@
 //! ```console
 //! $ cargo run --example redaction_string
 //! ```
-//!
-pub use crate::data::Pattern;
-pub use crate::redaction::Redaction;
+pub use crate::{data::Pattern, redaction::Redaction};
 
 mod data;
 mod engine;
