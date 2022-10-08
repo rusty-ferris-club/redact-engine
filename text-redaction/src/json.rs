@@ -26,6 +26,10 @@ impl Default for Redact {
 }
 
 impl Redact {
+    pub fn with_redact_template(redact_placeholder: &str) -> Self {
+        Self::new(redact_placeholder, vec![], vec![], vec![])
+    }
+
     /// Create a [`Redact`] Methods with all available fields
     pub fn new(
         redact_placeholder: &str,

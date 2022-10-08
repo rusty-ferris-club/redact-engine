@@ -1,0 +1,19 @@
+---
+source: text-redaction/src/pattern.rs
+expression: "redaction.redact_patterns(TEXT, true)"
+---
+Info {
+    string: "foo,[TEXT_REDACTED],baz,foo",
+    captures: [
+        Captures {
+            text: "bar",
+            position: Some(
+                Position {
+                    line_number: 1,
+                    start_offset: 4,
+                    end_offset: 7,
+                },
+            ),
+        },
+    ],
+}
