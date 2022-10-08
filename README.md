@@ -8,7 +8,7 @@ use text_redaction::{Pattern, Redaction};
 let text = "foo,bar";
 
 let pattern = Pattern {
-    test: Regex::new("(bar)")?,
+    test: Regex::new("(bar)").unwrap(),
     group: 1,
 };
 
@@ -18,7 +18,7 @@ let redacted_string = redaction.redact_str(text);
 
 ## Usage
 Add this to Cargo.toml:
-
+```toml
 [dependencies]
 text-redaction = { version = "0.1.0" }
 
@@ -27,6 +27,7 @@ text-redaction = { version = "0.1.0" }
  - Text
  - io::Read
  - JSON - should enable `redact-json` feature flag
+
 
 ## Example
 
