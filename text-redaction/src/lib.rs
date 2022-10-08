@@ -13,5 +13,5 @@ pub use crate::{data::Pattern, redaction::Redaction};
 mod json;
 
 mod data;
-mod engine;
+mod pattern;
 mod redaction;
