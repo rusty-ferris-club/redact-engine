@@ -11,8 +11,6 @@ use crate::{
 
 /// Redact struct
 pub struct Redaction {
-    redact_placeholder: String,
-
     #[cfg(feature = "redact-json")]
     json: json::Redact,
 
