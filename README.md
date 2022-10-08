@@ -1,5 +1,21 @@
 # text-redaction
 
+
+## Usage
+Add this to Cargo.toml:
+```toml
+[dependencies]
+text-redaction = { version = "0.1.0" }
+```
+
+## Supported Formats
+
+ - Text
+ - io::Read
+ - JSON - should enable `redact-json` feature flag
+
+
+
 Redact text
 
 ```rs
@@ -15,19 +31,6 @@ let pattern = Pattern {
 let redaction = Redaction::new().add_pattern(pattern);
 let redacted_string = redaction.redact_str(text);
 ```
-
-## Usage
-Add this to Cargo.toml:
-```toml
-[dependencies]
-text-redaction = { version = "0.1.0" }
-```
-
-## Formats
-
- - Text
- - io::Read
- - JSON - should enable `redact-json` feature flag
 
 
 ## Example
