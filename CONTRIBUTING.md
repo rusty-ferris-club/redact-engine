@@ -34,6 +34,11 @@ run the following command:
 cargo xtask test
 ```
 
+Include feature flag:
+```bash
+cargo xtask test -- --features redact-json
+```
+
 To capture the snapshots test we using [insta](https://github.com/mitsuhiko/insta) rust project. you can see the snapshot changes / new snapshot by running the command:
 ```bash
 cargo insta test --review
