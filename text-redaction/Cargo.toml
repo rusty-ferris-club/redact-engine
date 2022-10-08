@@ -45,3 +45,8 @@ required-features = ["redact-json"]
 name = "redaction_json_by_path"
 path = "examples/redaction_json_by_path.rs"
 required-features = ["redact-json"]
+
+[[example]]
+name = "redaction_json"
+path = "examples/redaction_json.rs"
+required-features = ["redact-json"]
