@@ -1,3 +1,4 @@
+use rayon::prelude::*;
 use regex::Regex;
 
 use crate::data::{Captures, Info, Pattern, Position, REDACT_PLACEHOLDER};
@@ -44,19 +45,14 @@ impl Redact {
 
         let captures = self
             .patterns
-            .iter()
-            .filter_map(|pattern| {
-                let result = Self::redact_by_pattern(str, pattern, with_info);
-                result.map(|findings| {
-                    for c in &findings {
-                        text_results = text_results.replacen(&c.text, &self.redact_placeholder, 1);
-                    }
-                    findings
-                })
-            })
+            .par_iter()
+            .filter_map(|pattern| Self::redact_by_pattern(str, pattern, with_info))
             .flatten()
             .collect::<Vec<_>>();
 
+        for c in &captures {
+            text_results = text_results.replacen(&c.text, &self.redact_placeholder, 1);
+        }
         Info {
             string: text_results,
             captures,
