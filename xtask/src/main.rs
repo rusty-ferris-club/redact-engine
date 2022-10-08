@@ -25,7 +25,13 @@ fn main() -> Result<(), anyhow::Error> {
                     .takes_value(false),
             ),
         )
-        .subcommand(Command::new("test"))
+        .subcommand(
+            Command::new("test").arg(
+                Arg::new("features")
+                    .help("Space or comma separated list of features to activate")
+                    .multiple_values(true),
+            ),
+        )
         .subcommand(Command::new("fmt"))
         .subcommand(Command::new("clippy"))
         .subcommand(Command::new("vars"));
@@ -40,7 +46,7 @@ fn main() -> Result<(), anyhow::Error> {
             create_dir_all("coverage")?;
 
             println!("=== running coverage ===");
-            cmd!("cargo", "test")
+            cmd!("cargo", "test", "--all-features", "--no-fail-fast")
                 .env("CARGO_INCREMENTAL", "0")
                 .env("RUSTFLAGS", "-Cinstrument-coverage")
                 .env("LLVM_PROFILE_FILE", "cargo-test-%p-%m.profraw")
@@ -97,8 +103,15 @@ fn main() -> Result<(), anyhow::Error> {
             println!("root: {:?}", root);
             Ok(())
         }
-        Some(("test", _)) => {
-            cmd!("cargo", "test").run()?;
+        Some(("test", sm)) => {
+            let mut args = vec!["test"];
+
+            if sm.is_present("features") {
+                let features: Vec<_> = sm.values_of("features").unwrap().collect();
+                args.extend(features);
+            }
+
+            cmd("cargo", &args).run()?;
             Ok(())
         }
         Some(("fmt", _)) => {

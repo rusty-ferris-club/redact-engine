@@ -2,18 +2,20 @@ use std::{io, str};
 
 use anyhow::Result;
 
+#[cfg(feature = "redact-json")]
+use crate::json;
 use crate::{
-    data::{Captures, Info, Pattern},
+    data::{Captures, Info, Pattern, REDACT_PLACEHOLDER},
     engine,
 };
-
-/// Default redact placeholder
-pub const REDACT_PLACEHOLDER: &str = "[TEXT_REDACTED]";
 
 /// Redact struct
 pub struct Redaction {
     patterns: Vec<Pattern>,
     redact_placeholder: String,
+
+    #[cfg(feature = "redact-json")]
+    json: json::Redact,
 }
 
 impl Default for Redaction {
@@ -60,6 +62,9 @@ impl Redaction {
         Self {
             patterns: vec![],
             redact_placeholder: redact_placeholder.to_string(),
+
+            #[cfg(feature = "redact-json")]
+            json: json::Redact::default(),
         }
     }
 
@@ -82,6 +87,20 @@ impl Redaction {
     /// ```
     pub fn add_pattern(mut self, pattern: Pattern) -> Self {
         self.patterns.push(pattern);
+        self
+    }
+
+    #[cfg(feature = "redact-json")]
+    #[must_use]
+    pub fn add_key(mut self, key: &str) -> Self {
+        self.json = self.json.add_key(key);
+        self
+    }
+
+    #[cfg(feature = "redact-json")]
+    #[must_use]
+    pub fn add_path(mut self, key: &str) -> Self {
+        self.json = self.json.add_path(key);
         self
     }
 
@@ -149,6 +168,15 @@ impl Redaction {
         Ok(self.redact_str_with_info(str::from_utf8(&buffer)?))
     }
 
+    #[cfg(feature = "redact-json")]
+    /// Redact from string
+    ///
+    /// # Errors
+    /// return an error when the given str is not a JSON string
+    pub fn redact_json(&self, str: &str) -> Result<String> {
+        self.json.redact_str(str)
+    }
+
     /// loop on the pattern list and try to find matches
     fn redact_patterns(&self, str: &str, with_info: bool) -> Info {
         let mut text_results = str.to_owned();
@@ -157,26 +185,13 @@ impl Redaction {
             .patterns
             .iter()
             .filter_map(|pattern| {
-                let result = engine::try_capture(str, &pattern.test, pattern.group, with_info);
-                if result.is_empty() {
-                    None
-                } else {
-                    Some(
-                        result
-                            .iter()
-                            .filter_map(|(finding_text, position)| {
-                                text_results = text_results.replacen(
-                                    finding_text,
-                                    &self.redact_placeholder,
-                                    1,
-                                );
-                                position.as_ref().map(|p| Captures {
-                                    position: p.clone(),
-                                })
-                            })
-                            .collect::<Vec<_>>(),
-                    )
-                }
+                let result = Self::redact_by_pattern(str, pattern, with_info);
+                result.map(|findings| {
+                    for c in &findings {
+                        text_results = text_results.replacen(&c.text, &self.redact_placeholder, 1);
+                    }
+                    findings
+                })
             })
             .flatten()
             .collect::<Vec<_>>();
@@ -184,6 +199,23 @@ impl Redaction {
         Info {
             string: text_results,
             captures,
+        }
+    }
+
+    fn redact_by_pattern(str: &str, pattern: &Pattern, with_info: bool) -> Option<Vec<Captures>> {
+        let result = engine::try_capture(str, &pattern.test, pattern.group, with_info);
+        if result.is_empty() {
+            None
+        } else {
+            Some(
+                result
+                    .iter()
+                    .map(|(finding_text, position)| Captures {
+                        text: finding_text.to_string(),
+                        position: position.clone(),
+                    })
+                    .collect::<Vec<_>>(),
+            )
         }
     }
 }

@@ -1,5 +1,8 @@
 use serde_derive::Deserialize;
 
+/// Default redact placeholder
+pub const REDACT_PLACEHOLDER: &str = "[TEXT_REDACTED]";
+
 #[derive(Debug, Deserialize, Clone)]
 pub struct Pattern {
     #[serde(with = "serde_regex")]
@@ -15,7 +18,8 @@ pub struct Info {
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Captures {
-    pub position: Position,
+    pub text: String,
+    pub position: Option<Position>,
 }
 
 #[derive(Debug, Deserialize, Clone)]

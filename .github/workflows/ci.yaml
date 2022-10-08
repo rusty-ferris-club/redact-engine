@@ -87,6 +87,12 @@ jobs:
           command: xtask
           args: test
 
+      - name: Run test with redact json feature flag on
+        uses: actions-rs/cargo@v1
+        with:
+          command: xtask
+          args: test -- --features redact-json
+
   clippy:
     name: clippy
     runs-on: ubuntu-latest
