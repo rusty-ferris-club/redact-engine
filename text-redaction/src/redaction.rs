@@ -40,7 +40,7 @@ impl Redaction {
     ///
     /// ```rust
     /// # use text_redaction::Redaction;
-    /// Redaction::new()
+    /// Redaction::custom("CUSTOM_HIDDEN_TEXT")
     /// # ;
     /// ```
     pub fn new() -> Self {
@@ -59,12 +59,10 @@ impl Redaction {
     /// ```
     pub fn custom(redact_placeholder: &str) -> Self {
         Self {
-            redact_placeholder: redact_placeholder.to_string(),
-
             #[cfg(feature = "redact-json")]
-            json: json::Redact::default(),
+            json: json::Redact::with_redact_template(redact_placeholder),
 
-            pattern: pattern::Redact::default(),
+            pattern: pattern::Redact::with_redact_template(redact_placeholder),
         }
     }
 
