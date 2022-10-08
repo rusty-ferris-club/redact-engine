@@ -21,6 +21,7 @@ Add this to Cargo.toml:
 ```toml
 [dependencies]
 text-redaction = { version = "0.1.0" }
+```
 
 ## Formats
 
