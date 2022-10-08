@@ -1,0 +1,7 @@
+---
+source: text-redaction/src/json.rs
+expression: redact.redact_str(&json)
+---
+Ok(
+    "{\"bar\":\"[TEXT_REDACTED]\",\"key\":\"value\"}",
+)

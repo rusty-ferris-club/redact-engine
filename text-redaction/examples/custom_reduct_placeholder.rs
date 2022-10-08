@@ -10,8 +10,8 @@ fn main() -> Result<()> {
         group: 1,
     };
 
-    let redaction = Redaction::custom("[HIDDEN_TEXT]").add_pattern(pattern);
-    println!("{:#?}", redaction.redact_str(text));
+    let redact = Redaction::custom("[HIDDEN_TEXT]").add_pattern(pattern);
+    println!("{:#?}", redact.redact_str(text));
 
     Ok(())
 }

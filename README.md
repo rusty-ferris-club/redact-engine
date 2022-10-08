@@ -20,8 +20,14 @@ let redacted_string = redaction.redact_str(text);
 Add this to Cargo.toml:
 ```toml
 [dependencies]
-text-reduction = { version = "0.1.0" }
-```
+text-redaction = { version = "0.1.0" }
+
+## Formats
+
+ - Text
+ - io::Read
+ - JSON - should enable `redact-json` feature flag
+
 
 ## Example
 
