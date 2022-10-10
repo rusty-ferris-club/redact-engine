@@ -18,6 +18,7 @@ Your PR must also:
  - be based on the `main` branch
  - adhere to the [code style](#code-style)
  - pass the [test suites](#tests)
+ - check [documentation](#documentation)
 
 
 ## Tests
@@ -58,3 +59,12 @@ cargo xtask clippy
 
 We use the standard Rust code style, and enforce it with `rustfmt`/`cargo fmt`.
 A few code style options are set in the [`.rustfmt.toml`](./.rustfmt.toml) file, and some of them are not stable yet and require a nightly version of rustfmt.
+
+
+## documentation
+
+Generate and open [text-redaction](https://github.com/rusty-ferris-club/text-redaction) to make sure that your documentation os current
+
+```bash
+cargo xtask docs-preview
+```
