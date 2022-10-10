@@ -13,6 +13,8 @@ use fsx::dir::CopyOptions;
 use glob::glob;
 
 const TEMPLATE_PROJECT_NAME: &str = "text-redaction";
+
+#[allow(clippy::too_many_lines)]
 fn main() -> Result<(), anyhow::Error> {
     let cli = Command::new("xtask")
         .setting(AppSettings::SubcommandRequiredElseHelp)
@@ -34,6 +36,15 @@ fn main() -> Result<(), anyhow::Error> {
         )
         .subcommand(Command::new("fmt"))
         .subcommand(Command::new("clippy"))
+        .subcommand(
+            Command::new("docs-preview").arg(
+                Arg::new("keep")
+                    .short('k')
+                    .long("keep")
+                    .help("keep previous generated docs")
+                    .takes_value(false),
+            ),
+        )
         .subcommand(Command::new("vars"));
 
     let matches = cli.get_matches();
@@ -120,6 +131,22 @@ fn main() -> Result<(), anyhow::Error> {
         }
         Some(("clippy", _)) => {
             cmd!("cargo", "clippy", "--", "-D", "warnings").run()?;
+            Ok(())
+        }
+        Some(("docs-preview", sm)) => {
+            if !sm.is_present("keep") {
+                cmd!("cargo", "clean", "--doc").run()?;
+            }
+            cmd!(
+                "cargo",
+                "doc",
+                "--workspace",
+                "--all-features",
+                "--no-deps",
+                "--document-private-items",
+                "--open",
+            )
+            .run()?;
             Ok(())
         }
         _ => unreachable!("unreachable branch"),
