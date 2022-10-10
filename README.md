@@ -10,7 +10,7 @@ text-redaction = { version = "0.1.0" }
 ## Usecase
  - Redact sensitive information from a text text file
  - Redact JSON schema by providing
-    - Key in the json
+    - By key
     - Prefix path
  - Integrate with [env_logger](./text-redaction//examples/logger/env-logger)
 
