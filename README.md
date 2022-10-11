@@ -29,7 +29,7 @@ let redacted_string = redaction.redact_str(text);
 
 ## Example
 
-To see all code example, run the command `cargo run --example`
+To see all code [example](./text-redaction/examples/), run the command `cargo run --example`
 
 ### Redact from regex pattern
 
