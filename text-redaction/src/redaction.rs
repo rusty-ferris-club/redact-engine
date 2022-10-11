@@ -1,6 +1,7 @@
 use std::{io, str};
 
-use anyhow::Result;
+use anyhow::{bail, Result};
+use regex::{escape, Regex};
 
 #[cfg(feature = "redact-json")]
 use crate::json;
@@ -64,6 +65,60 @@ impl Redaction {
 
             pattern: pattern::Redact::with_redact_template(redact_placeholder),
         }
+    }
+
+    /// redact exact string match
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// # use text_redaction::Redaction;
+    /// let text = "foo,bar";
+    /// Redaction::new().add_value("foo");
+    /// # ;
+    /// ```
+    /// # Errors
+    /// when the value could not converted to a regex
+    pub fn add_value(self, value: &str) -> Result<Self> {
+        let pattern = Pattern {
+            test: Regex::new(&format!("({})", escape(value)))?,
+            group: 1,
+        };
+
+        Ok(self.add_pattern(pattern))
+    }
+
+    /// redact exact string match from list of strings
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// # use text_redaction::Redaction;
+    /// let text = "foo,bar,baz";
+    /// Redaction::new().add_values(vec!["foo", "baz"]);
+    /// # ;
+    /// ```
+    /// # Errors
+    /// when the value could not converted to a regex
+    pub fn add_values(self, values: Vec<&str>) -> Result<Self> {
+        let mut errors = vec![];
+
+        let patterns = values
+            .iter()
+            .filter_map(|val| match Regex::new(&format!("({})", escape(val))) {
+                Ok(test) => Some(Pattern { test, group: 1 }),
+                Err(_e) => {
+                    errors.push((*val).to_string());
+                    None
+                }
+            })
+            .collect::<Vec<_>>();
+
+        if !errors.is_empty() {
+            bail!("could not parse {} to regex", errors.join(","))
+        }
+
+        Ok(self.add_patterns(patterns))
     }
 
     #[must_use]
@@ -172,7 +227,7 @@ impl Redaction {
     /// # Errors
     /// return an error when the given str is not a JSON string
     pub fn redact_json(&self, str: &str) -> Result<String> {
-        self.json.redact_str(str)
+        self.json.redact_str(&self.redact_str(str))
     }
 }
 
@@ -182,11 +237,45 @@ mod test_redaction {
     use std::{env, fs::File, io::Write};
 
     use insta::assert_debug_snapshot;
-    use regex::Regex;
 
     use super::*;
 
-    const TEXT: &str = "foo,bar,baz";
+    const TEXT: &str = "foo,bar,baz,extra";
+
+    #[cfg(feature = "redact-json")]
+    use serde_json::json;
+
+    #[test]
+    fn test_by_pattern() {
+        let pattern = Pattern {
+            test: Regex::new("(foo)").unwrap(),
+            group: 1,
+        };
+        let patterns = vec![
+            Pattern {
+                test: Regex::new("(bar)").unwrap(),
+                group: 1,
+            },
+            Pattern {
+                test: Regex::new("(baz)").unwrap(),
+                group: 1,
+            },
+        ];
+        assert_debug_snapshot!(Redaction::new()
+            .add_pattern(pattern)
+            .add_patterns(patterns)
+            .redact_str(TEXT));
+    }
+
+    #[test]
+    fn test_bt_value() {
+        assert_debug_snapshot!(Redaction::new()
+            .add_value("foo")
+            .unwrap()
+            .add_values(vec!["bar", "baz"])
+            .unwrap()
+            .redact_str(TEXT));
+    }
 
     #[test]
     fn can_redact_str() {
@@ -244,15 +333,18 @@ mod test_redaction {
 
     #[test]
     fn can_redact_with_multiple_patterns() {
-        let bar = Pattern {
-            test: Regex::new("(bar)").unwrap(),
-            group: 1,
-        };
-        let baz = Pattern {
-            test: Regex::new("(foo),(bar),(baz)").unwrap(),
-            group: 3,
-        };
-        let redaction = Redaction::new().add_patterns(vec![bar, baz]);
+        let patterns = vec![
+            Pattern {
+                test: Regex::new("(bar)").unwrap(),
+                group: 1,
+            },
+            Pattern {
+                test: Regex::new("(foo),(bar),(baz)").unwrap(),
+                group: 3,
+            },
+        ];
+
+        let redaction = Redaction::new().add_patterns(patterns);
         assert_debug_snapshot!(redaction.redact_str(TEXT));
     }
 
@@ -264,5 +356,45 @@ mod test_redaction {
         };
         let redaction = Redaction::custom("[HIDDEN_TEXT]").add_pattern(pattern);
         assert_debug_snapshot!(redaction.redact_str(TEXT));
+    }
+
+    #[test]
+    #[cfg(feature = "redact-json")]
+    fn can_redact_json() {
+        let pattern = Pattern {
+            test: Regex::new("(redact-by-pattern)").unwrap(),
+            group: 1,
+        };
+
+        let json = json!({
+        "all-path": {
+            "b": {
+                "key": "redact_me",
+            },
+            "foo": "redact_me",
+            "key": "redact_me",
+        },
+        "specific-key": {
+            "b": {
+                "key": "skip-redaction",
+            },
+            "foo": "skip-redaction",
+            "key": "redact_me"
+        },
+        "key": "redact_me",
+        "skip": "skip-redaction",
+        "by-value": "bar",
+        "by-pattern": "redact-by-pattern",
+        })
+        .to_string();
+
+        let redaction = Redaction::default()
+            .add_pattern(pattern)
+            .add_path("all-path.*")
+            .add_path("specific-key.key")
+            .add_key("key")
+            .add_value("bar")
+            .unwrap();
+        assert_debug_snapshot!(redaction.redact_json(&json));
     }
 }

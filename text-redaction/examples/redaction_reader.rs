@@ -3,7 +3,7 @@ use regex::Regex;
 use text_redaction::{Pattern, Redaction};
 
 fn main() -> Result<()> {
-    let file = std::fs::File::open("tests/test.txt")?;
+    let file = std::fs::File::open("text-redaction/tests/test.txt")?;
 
     let pattern = Pattern {
         test: Regex::new("(foo)")?,

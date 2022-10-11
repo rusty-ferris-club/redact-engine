@@ -4,7 +4,7 @@ expression: "redaction.redact_reader_with_info(File::open(file_path).unwrap())"
 ---
 Ok(
     Info {
-        string: "foo,[TEXT_REDACTED],baz",
+        string: "foo,[TEXT_REDACTED],baz,extra",
         captures: [
             Captures {
                 text: "bar",

@@ -2,4 +2,4 @@
 source: text-redaction/src/redaction.rs
 expression: redaction.redact_str(TEXT)
 ---
-"foo,[TEXT_REDACTED],baz"
+"foo,[TEXT_REDACTED],baz,extra"

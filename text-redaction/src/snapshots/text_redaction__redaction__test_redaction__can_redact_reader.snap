@@ -3,5 +3,5 @@ source: text-redaction/src/redaction.rs
 expression: "redaction.redact_reader(File::open(file_path).unwrap())"
 ---
 Ok(
-    "foo,[TEXT_REDACTED],baz",
+    "foo,[TEXT_REDACTED],baz,extra",
 )
