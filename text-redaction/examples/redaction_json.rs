@@ -1,4 +1,3 @@
-#[cfg(feature = "redact-json")]
 use serde_json::json;
 use text_redaction::Redaction;
 

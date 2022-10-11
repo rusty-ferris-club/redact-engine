@@ -3,7 +3,7 @@ source: text-redaction/src/redaction.rs
 expression: redaction.redact_str_with_info(TEXT)
 ---
 Info {
-    string: "foo,[TEXT_REDACTED],baz",
+    string: "foo,[TEXT_REDACTED],baz,extra",
     captures: [
         Captures {
             text: "bar",
