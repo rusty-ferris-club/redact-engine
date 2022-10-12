@@ -88,7 +88,6 @@ impl Redact {
                 cap.get(group).map(|m| {
                     let more_info = if with_info {
                         Some(Position {
-                            line_number: 1,
                             start_offset: m.start(),
                             end_offset: m.end(),
                         })
