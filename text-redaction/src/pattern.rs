@@ -1,12 +1,20 @@
+//! Patterns redaction by [Pattern]
+//!
+//! # Example:
+//! ```
+#![doc = include_str!("../examples/redaction_string.rs")]
+//! ```
+//!
 use rayon::prelude::*;
 use regex::Regex;
 
 use crate::data::{Captures, Info, Pattern, Position, REDACT_PLACEHOLDER};
 
+/// Define pattern
 pub struct Redact {
     /// redact placeholder text
-    pub redact_placeholder: String,
-
+    pub text_placeholder: String,
+    /// list of [Pattern]
     patterns: Vec<Pattern>,
 }
 
@@ -18,28 +26,49 @@ impl Default for Redact {
 }
 
 impl Redact {
-    pub fn with_redact_template(redact_placeholder: &str) -> Self {
-        Self::new(redact_placeholder, vec![])
+    /// Create a [`Redact`] Methods with custom redact placeholder
+    ///
+    /// # Arguments
+    /// * `text_placeholder` - placeholder redaction
+    pub fn with_redact_placeholder(text_placeholder: &str) -> Self {
+        Self::new(text_placeholder, vec![])
     }
+
     /// Create a [`Redact`] Methods with all available fields
-    pub fn new(redact_placeholder: &str, patterns: Vec<Pattern>) -> Self {
+    ///
+    /// # Arguments
+    /// * `text_placeholder` - placeholder redaction
+    /// * `patterns` - Vec of [Pattern]
+    pub fn new(text_placeholder: &str, patterns: Vec<Pattern>) -> Self {
         Self {
-            redact_placeholder: redact_placeholder.to_string(),
+            text_placeholder: text_placeholder.to_string(),
             patterns,
         }
     }
 
+    /// Add [Pattern]
+    ///
+    /// # Arguments
+    /// * `pattern` - single [Pattern]
     pub fn add_pattern(mut self, pattern: Pattern) -> Self {
         self.patterns.push(pattern);
         self
     }
 
+    /// Add list of [Pattern]
+    ///
+    /// # Arguments
+    /// * `patterns` - Vec of [Pattern]
     pub fn add_patterns(mut self, patterns: Vec<Pattern>) -> Self {
         self.patterns.extend(patterns);
         self
     }
 
-    /// loop on the pattern list and try to find matches
+    /// loop on the [Pattern] vector and try to find matches
+    ///
+    /// # Arguments
+    /// * `str` - is the redact login going to search on
+    /// * `with_info` - Adding extra match details to the response
     pub fn redact_patterns(&self, str: &str, with_info: bool) -> Info {
         let mut text_results = str.to_owned();
 
@@ -51,7 +80,7 @@ impl Redact {
             .collect::<Vec<_>>();
 
         for c in &captures {
-            text_results = text_results.replacen(&c.text, &self.redact_placeholder, 1);
+            text_results = text_results.replacen(&c.text, &self.text_placeholder, 1);
         }
         Info {
             string: text_results,
@@ -59,6 +88,12 @@ impl Redact {
         }
     }
 
+    /// Redact from a single [Pattern]
+    ///
+    /// # Arguments
+    /// * `str` - is the redact login going to search on
+    /// * `pattern` - [Pattern] settings
+    /// * `with_info` - Adding extra match details to the response
     fn redact_by_pattern(str: &str, pattern: &Pattern, with_info: bool) -> Option<Vec<Captures>> {
         let result = Self::try_capture(str, &pattern.test, pattern.group, with_info);
         if result.is_empty() {
@@ -76,7 +111,12 @@ impl Redact {
         }
     }
 
-    /// Check if the given regex match to the given string
+    /// Try to capture matches by the given regex
+    ///
+    /// # Arguments
+    /// * `str` - is the redact login going to search on
+    /// * `re` - [regex::Regex] rule
+    /// * `with_info` - Adding extra match details to the response
     fn try_capture(
         str: &str,
         re: &Regex,

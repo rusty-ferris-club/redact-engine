@@ -1,3 +1,4 @@
+//! redaction function user interface
 use std::{io, str};
 
 use anyhow::{bail, Result};
@@ -10,21 +11,24 @@ use crate::{
     pattern,
 };
 
-/// Redact struct
+/// Define redact settings
 pub struct Redaction {
+    /// Define an option to redact text in JSON schema. enable by `redact-json`
+    /// feature flag enabled.
     #[cfg(feature = "redact-json")]
     json: json::Redact,
 
+    /// Define the default redact option by patterns logic.
     pattern: pattern::Redact,
 }
 
 impl Default for Redaction {
     /// Create a [`Redaction`] Methods
     ///
-    /// # Examples
+    /// # Example
     ///
     /// ```rust
-    /// # use text_redaction::Redaction;
+    /// use text_redaction::Redaction;
     /// Redaction::default()
     /// # ;
     /// ```
@@ -37,10 +41,10 @@ impl Redaction {
     #[must_use]
     /// Create a [`Redaction`] Methods
     ///
-    /// # Examples
+    /// # Example
     ///
     /// ```rust
-    /// # use text_redaction::Redaction;
+    /// use text_redaction::Redaction;
     /// Redaction::custom("CUSTOM_HIDDEN_TEXT")
     /// # ;
     /// ```
@@ -51,28 +55,34 @@ impl Redaction {
     #[must_use]
     /// Create a [`Redaction`] with redact placeholder text.
     ///
-    /// # Examples
+    /// # Arguments
+    /// * `redact_placeholder` - placeholder redaction
+    ///
+    /// # Example
     ///
     /// ```rust
-    /// # use text_redaction::Redaction;
+    /// use text_redaction::Redaction;
     /// Redaction::custom("[HIDDEN_VALUE]")
     /// # ;
     /// ```
     pub fn custom(redact_placeholder: &str) -> Self {
         Self {
             #[cfg(feature = "redact-json")]
-            json: json::Redact::with_redact_template(redact_placeholder),
+            json: json::Redact::with_redact_placeholder(redact_placeholder),
 
-            pattern: pattern::Redact::with_redact_template(redact_placeholder),
+            pattern: pattern::Redact::with_redact_placeholder(redact_placeholder),
         }
     }
 
     /// redact exact string match
     ///
-    /// # Examples
+    /// # Arguments
+    /// * `value` - The redaction value
+    ///
+    /// # Example
     ///
     /// ```rust
-    /// # use text_redaction::Redaction;
+    /// use text_redaction::Redaction;
     /// let text = "foo,bar";
     /// Redaction::new().add_value("foo");
     /// # ;
@@ -90,10 +100,13 @@ impl Redaction {
 
     /// redact exact string match from list of strings
     ///
-    /// # Examples
+    /// # Arguments
+    /// * `values` - List of redaction value
+    ///
+    /// # Example
     ///
     /// ```rust
-    /// # use text_redaction::Redaction;
+    /// use text_redaction::Redaction;
     /// let text = "foo,bar,baz";
     /// Redaction::new().add_values(vec!["foo", "baz"]);
     /// # ;
@@ -124,11 +137,14 @@ impl Redaction {
     #[must_use]
     /// Add a [`Pattern`] to the redaction list
     ///
-    /// # Examples
+    /// # Arguments
+    /// * `pattern` - redact [Pattern]
+    ///
+    /// # Example
     ///
     /// ```rust
-    /// # use text_redaction::{Redaction, Pattern};
-    /// # use regex::Regex;
+    /// use text_redaction::{Redaction, Pattern};
+    /// use regex::Regex;
     /// let text = "foo,bar";
     /// let pattern = Pattern {
     ///    test: Regex::new("(bar)").unwrap(),
@@ -146,11 +162,14 @@ impl Redaction {
     #[must_use]
     /// Add list if [`Pattern`] to the redaction list
     ///
-    /// # Examples
+    /// # Arguments
+    /// * `patterns` - List of redact [Pattern]
+    ///
+    /// # Example
     ///
     /// ```rust
-    /// # use text_redaction::{Redaction, Pattern};
-    /// # use regex::Regex;
+    /// use text_redaction::{Redaction, Pattern};
+    /// use regex::Regex;
     /// let text = "foo,bar";
     /// let pattern = Pattern {
     ///    test: Regex::new("(bar)").unwrap(),
@@ -167,6 +186,18 @@ impl Redaction {
 
     #[cfg(feature = "redact-json")]
     #[must_use]
+    /// Redact the JSON value of the given key. enable by `redact-json`
+    ///
+    /// # Arguments
+    /// * `key` -  The JSON key
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use text_redaction::Redaction;
+    /// Redaction::new().add_key("bar").add_key("array");
+    /// # ;
+    /// ```
     pub fn add_key(mut self, key: &str) -> Self {
         self.json = self.json.add_key(key);
         self
@@ -174,6 +205,15 @@ impl Redaction {
 
     #[cfg(feature = "redact-json")]
     #[must_use]
+    /// Redact the JSON by JSON path. enable by `redact-json`.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use text_redaction::Redaction;
+    /// Redaction::new().add_key("bar").add_key("array");
+    /// # ;
+    /// ```
     pub fn add_path(mut self, key: &str) -> Self {
         self.json = self.json.add_path(key);
         self

@@ -1,4 +1,4 @@
-//! > **Redact text from JSON format**
+//! Redact text from JSON format
 //!
 //! # Optional
 //! This requires `serde_json` feature to be enabled.
@@ -9,7 +9,7 @@ use crate::data::REDACT_PLACEHOLDER;
 
 pub struct Redact {
     /// redact placeholder text
-    pub redact_placeholder: String,
+    pub text_placeholder: String,
     /// list of keys to reduct
     pub keys: Vec<String>,
     /// list of JSON specific path
@@ -26,19 +26,19 @@ impl Default for Redact {
 }
 
 impl Redact {
-    pub fn with_redact_template(redact_placeholder: &str) -> Self {
-        Self::new(redact_placeholder, vec![], vec![], vec![])
+    pub fn with_redact_placeholder(text_placeholder: &str) -> Self {
+        Self::new(text_placeholder, vec![], vec![], vec![])
     }
 
     /// Create a [`Redact`] Methods with all available fields
     pub fn new(
-        redact_placeholder: &str,
+        text_placeholder: &str,
         keys: Vec<String>,
         path: Vec<String>,
         path_prefix: Vec<String>,
     ) -> Self {
         Self {
-            redact_placeholder: redact_placeholder.to_string(),
+            text_placeholder: text_placeholder.to_string(),
             keys,
             path,
             path_prefix,
@@ -129,12 +129,12 @@ impl Redact {
                 };
 
                 if self.path.contains(&obj_path) || self.path_prefix.contains(&obj_path) {
-                    *value = Value::String(self.redact_placeholder.to_string());
+                    *value = Value::String(self.text_placeholder.to_string());
                 } else if self.keys.contains(key) {
                     if value.is_array() {
                         self.redact_value_array(value);
                     } else {
-                        *value = Value::String(self.redact_placeholder.to_string());
+                        *value = Value::String(self.text_placeholder.to_string());
                     }
                 } else if value.is_object() {
                     self.redact_value(value, obj_path.clone());
@@ -147,7 +147,7 @@ impl Redact {
     fn redact_value_array(&self, array: &mut Value) {
         array.as_array_mut().iter_mut().for_each(|values| {
             values.iter_mut().for_each(|val| {
-                *val = Value::String(self.redact_placeholder.to_string());
+                *val = Value::String(self.text_placeholder.to_string());
             });
         });
     }
