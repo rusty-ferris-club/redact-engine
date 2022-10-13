@@ -8,7 +8,7 @@ description = ""
 homepage = "https://github.com/rusty-ferris-club/text-redaction"
 repository = "https://github.com/rusty-ferris-club/text-redaction"
 documentation = "https://docs.rs/text-redaction/latest/text-redaction/"
-readme = "README.md"
+readme = "../README.md"
 keywords = []
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
