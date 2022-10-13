@@ -1,14 +1,15 @@
 ---
 source: text-redaction/src/pattern.rs
-expression: "Redact::try_capture(TEXT, &Regex::new(\"(foo)\").unwrap(), 1, true)"
+expression: "Redact::try_capture(text, &Regex::new(\"(foo)\").unwrap(), 1, true)"
 ---
 [
     (
         "foo",
         Some(
             Position {
-                start_offset: 0,
-                end_offset: 3,
+                line: 2,
+                start_offset: 12,
+                end_offset: 15,
             },
         ),
     ),
@@ -16,8 +17,9 @@ expression: "Redact::try_capture(TEXT, &Regex::new(\"(foo)\").unwrap(), 1, true)
         "foo",
         Some(
             Position {
-                start_offset: 12,
-                end_offset: 15,
+                line: 4,
+                start_offset: 36,
+                end_offset: 39,
             },
         ),
     ),

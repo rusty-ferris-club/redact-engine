@@ -4,10 +4,12 @@ use std::{io, str};
 use anyhow::{bail, Result};
 use regex::{escape, Regex};
 
+#[cfg(feature = "redact-info")]
+use crate::data::Info;
 #[cfg(feature = "redact-json")]
 use crate::json;
 use crate::{
-    data::{Info, Pattern, REDACT_PLACEHOLDER},
+    data::{Pattern, REDACT_PLACEHOLDER},
     pattern,
 };
 
@@ -188,6 +190,9 @@ impl Redaction {
     #[must_use]
     /// Redact the JSON value of the given key. enable by `redact-json`
     ///
+    /// # Optional
+    /// When `redact-json` feature flag is enabled
+    ///
     /// # Arguments
     /// * `key` -  The JSON key
     ///
@@ -207,6 +212,9 @@ impl Redaction {
     #[must_use]
     /// Redact the JSON by JSON path. enable by `redact-json`.
     ///
+    /// # Optional
+    /// When `redact-json` feature flag is enabled
+    ///
     /// # Example
     ///
     /// ```rust
@@ -225,8 +233,12 @@ impl Redaction {
         self.pattern.redact_patterns(str, false).string
     }
 
+    #[cfg(feature = "redact-info")]
     #[must_use]
     /// Redact from string with extra information of the matches
+    ///
+    /// # Optional
+    /// When `redact-info` feature flag is enabled
     pub fn redact_str_with_info(&self, str: &str) -> Info {
         self.pattern.redact_patterns(str, true)
     }
@@ -248,9 +260,13 @@ impl Redaction {
 
     /// Redact text from reader with extra information of the matches
     ///
+    /// # Optional
+    /// When `redact-info` feature flag is enabled
+    ///
     /// # Errors
     /// - When file not exists.
     /// - Could not open reader.
+    #[cfg(feature = "redact-info")]
     pub fn redact_reader_with_info<R>(&self, rdr: R) -> Result<Info>
     where
         R: io::Read,
@@ -262,7 +278,10 @@ impl Redaction {
     }
 
     #[cfg(feature = "redact-json")]
-    /// Redact from string
+    /// Redact from string.
+    ///
+    /// # Optional
+    /// When `redact-json` feature flag is enabled
     ///
     /// # Errors
     /// return an error when the given str is not a JSON string
@@ -328,6 +347,7 @@ mod test_redaction {
     }
 
     #[test]
+    #[cfg(feature = "redact-info")]
     fn can_redact_str_with_info() {
         let pattern = Pattern {
             test: Regex::new("(bar)").unwrap(),
@@ -355,6 +375,7 @@ mod test_redaction {
     }
 
     #[test]
+    #[cfg(feature = "redact-info")]
     fn can_redact_reader_with_info() {
         let file_path = env::temp_dir().join("foo.txt");
 
