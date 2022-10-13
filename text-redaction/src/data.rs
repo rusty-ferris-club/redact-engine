@@ -34,6 +34,8 @@ pub struct Captures {
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Position {
+    /// capture line number
+    pub line: usize,
     /// start caption position
     pub start_offset: usize,
     /// end caption position

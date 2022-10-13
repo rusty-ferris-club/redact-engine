@@ -68,7 +68,8 @@ impl Redact {
     ///
     /// # Arguments
     /// * `str` - is the redact login going to search on
-    /// * `with_info` - Adding extra match details to the response
+    /// * `with_info` - Adding extra match details to the response. supported
+    ///   only when `redact-info` feature flag is enabled
     pub fn redact_patterns(&self, str: &str, with_info: bool) -> Info {
         let mut text_results = str.to_owned();
 
@@ -93,7 +94,8 @@ impl Redact {
     /// # Arguments
     /// * `str` - is the redact login going to search on
     /// * `pattern` - [Pattern] settings
-    /// * `with_info` - Adding extra match details to the response
+    /// * `with_info` - Adding extra match details to the response. supported
+    ///   only when `redact-info` feature flag is enabled
     fn redact_by_pattern(str: &str, pattern: &Pattern, with_info: bool) -> Option<Vec<Captures>> {
         let result = Self::try_capture(str, &pattern.test, pattern.group, with_info);
         if result.is_empty() {
@@ -116,18 +118,23 @@ impl Redact {
     /// # Arguments
     /// * `str` - is the redact login going to search on
     /// * `re` - [regex::Regex] rule
-    /// * `with_info` - Adding extra match details to the response
+    /// * `with_info` - Adding extra match details to the response. supported
+    ///   only when `redact-info` feature flag is enabled
     fn try_capture(
         str: &str,
         re: &Regex,
         group: usize,
-        with_info: bool,
+        #[allow(unused_variables)] with_info: bool,
     ) -> Vec<(String, Option<Position>)> {
         re.captures_iter(str)
             .filter_map(|cap| {
                 cap.get(group).map(|m| {
+                    #[cfg(not(feature = "redact-info"))]
+                    let more_info = None;
+                    #[cfg(feature = "redact-info")]
                     let more_info = if with_info {
                         Some(Position {
+                            line: bytecount::count(&str.as_bytes()[..m.start()], 0x0A) + 1,
                             start_offset: m.start(),
                             end_offset: m.end(),
                         })
@@ -178,6 +185,7 @@ mod test_pattern {
     }
 
     #[test]
+    #[cfg(feature = "redact-info")]
     fn can_redact_patterns_with_info() {
         let pattern = Pattern {
             test: Regex::new("(bar)").unwrap(),
@@ -197,10 +205,16 @@ mod test_pattern {
         ));
     }
 
+    #[cfg(feature = "redact-info")]
     #[test]
     fn can_try_capture_with_info() {
+        let text = r#"bar
+        foo
+        baz
+        foo
+        "#;
         assert_debug_snapshot!(Redact::try_capture(
-            TEXT,
+            text,
             &Regex::new("(foo)").unwrap(),
             1,
             true
