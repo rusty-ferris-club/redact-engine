@@ -188,7 +188,7 @@ impl Redaction {
 
     #[cfg(feature = "redact-json")]
     #[must_use]
-    /// Redact the JSON value of the given key. enable by `redact-json`
+    /// Redact the JSON value of the given keys. enable by `redact-json`
     ///
     /// # Optional
     /// When `redact-json` feature flag is enabled
@@ -200,17 +200,17 @@ impl Redaction {
     ///
     /// ```rust
     /// use text_redaction::Redaction;
-    /// Redaction::new().add_key("bar").add_key("array");
+    /// Redaction::new().add_keys(vec!["bar", "array"]);
     /// # ;
     /// ```
-    pub fn add_key(mut self, key: &str) -> Self {
-        self.json = self.json.add_key(key);
+    pub fn add_keys(mut self, keys: Vec<&str>) -> Self {
+        self.json = self.json.add_keys(keys);
         self
     }
 
     #[cfg(feature = "redact-json")]
     #[must_use]
-    /// Redact the JSON by JSON path. enable by `redact-json`.
+    /// Redact the JSON by JSON paths. enable by `redact-json`.
     ///
     /// # Optional
     /// When `redact-json` feature flag is enabled
@@ -219,11 +219,11 @@ impl Redaction {
     ///
     /// ```rust
     /// use text_redaction::Redaction;
-    /// Redaction::new().add_key("bar").add_key("array");
+    /// Redaction::new().add_paths(vec!["bar", "array.*"]);
     /// # ;
     /// ```
-    pub fn add_path(mut self, key: &str) -> Self {
-        self.json = self.json.add_path(key);
+    pub fn add_paths(mut self, key: Vec<&str>) -> Self {
+        self.json = self.json.add_paths(key);
         self
     }
 
@@ -451,9 +451,8 @@ mod test_redaction {
 
         let redaction = Redaction::default()
             .add_pattern(pattern)
-            .add_path("all-path.*")
-            .add_path("specific-key.key")
-            .add_key("key")
+            .add_paths(vec!["all-path.*", "specific-key.key"])
+            .add_keys(vec!["key"])
             .add_value("bar")
             .unwrap();
         assert_debug_snapshot!(redaction.redact_json(&json));

@@ -3,7 +3,7 @@ use serde_json::json;
 use text_redaction::Redaction;
 
 fn main() {
-    let redaction = Redaction::new().add_key("bar").add_key("array");
+    let redaction = Redaction::new().add_keys(vec!["bar", "array"]);
 
     let json = json!({
         "key": "value",

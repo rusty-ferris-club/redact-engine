@@ -3,9 +3,8 @@ use text_redaction::Redaction;
 
 fn main() {
     let redact = Redaction::default()
-        .add_path("foo.*")
-        .add_path("bar.key")
-        .add_key("key");
+        .add_paths(vec!["foo.*", "bar.key"])
+        .add_keys(vec!["key"]);
 
     let json = json!({
     "foo": {
