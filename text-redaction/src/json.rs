@@ -45,7 +45,7 @@ impl Redact {
         }
     }
 
-    /// add key to redact
+    /// redact JSON value bt givenkeys
     ///
     /// # Examples
     ///
@@ -53,15 +53,15 @@ impl Redact {
     /// # use text_redaction::Redaction;
     /// let text = "foo,bar";
     ///
-    /// Redaction::new().add_key("key");
+    /// Redaction::new().add_keys(vec!["key"]);
     /// # ;
     /// ```
-    pub fn add_key(mut self, key: &str) -> Self {
-        self.keys.push(key.to_string());
+    pub fn add_keys(mut self, keys: Vec<&str>) -> Self {
+        self.keys.extend(keys.iter().map(|&s| s.to_string()));
         self
     }
 
-    /// redact JSON value by specific key path
+    /// redact JSON value by specific key path list
     ///
     /// # Example:
     /// ## Redact by specific key
@@ -79,7 +79,7 @@ impl Redact {
     /// # use text_redaction::{Redaction, Pattern};
     /// # use regex::Regex;
     ///
-    /// Redaction::new().add_path("a.b.key");
+    /// Redaction::new().add_paths(vec!["a.b.key"]);
     /// # ;
     /// ```
     /// ## Redact all keys under `a`
@@ -97,14 +97,17 @@ impl Redact {
     /// # use text_redaction::{Redaction, Pattern};
     /// # use regex::Regex;
     ///
-    /// Redaction::new().add_path("a.*");
+    /// Redaction::new().add_paths(vec!["a.*"]);
     /// # ;
-    pub fn add_path(mut self, path: &str) -> Self {
-        if path.ends_with('*') {
-            self.path_prefix.push(path.to_string().replace(".*", ""));
-        } else {
-            self.path.push(path.to_string());
+    pub fn add_paths(mut self, path: Vec<&str>) -> Self {
+        for path in path.iter() {
+            if path.ends_with('*') {
+                self.path_prefix.push((*path).to_string().replace(".*", ""));
+            } else {
+                self.path.push((*path).to_string());
+            }
         }
+
         self
     }
 
@@ -169,7 +172,7 @@ mod test_redaction {
         })
         .to_string();
 
-        let redact = Redact::default().add_key("bar");
+        let redact = Redact::default().add_keys(vec!["bar"]);
 
         assert_debug_snapshot!(redact.redact_str(&json));
     }
@@ -188,7 +191,7 @@ mod test_redaction {
             })
         .to_string();
 
-        let redact = Redact::default().add_path("a.foo");
+        let redact = Redact::default().add_paths(vec!["a.foo"]);
 
         assert_debug_snapshot!(redact.redact_str(&json));
     }
@@ -207,7 +210,7 @@ mod test_redaction {
             })
         .to_string();
 
-        let redact = Redact::default().add_path("a.*");
+        let redact = Redact::default().add_paths(vec!["a.*"]);
 
         assert_debug_snapshot!(redact.redact_str(&json));
     }
@@ -235,9 +238,8 @@ mod test_redaction {
         .to_string();
 
         let redact = Redact::default()
-            .add_path("foo.*")
-            .add_path("bar.key")
-            .add_key("key");
+            .add_paths(vec!["foo.*", "bar.key"])
+            .add_keys(vec!["key"]);
 
         assert_debug_snapshot!(redact.redact_str(&json));
     }

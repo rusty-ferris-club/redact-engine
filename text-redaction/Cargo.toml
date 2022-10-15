@@ -29,6 +29,8 @@ bytecount = { version = "0.6.3", optional = true }
 
 [dev-dependencies]
 insta = "1.21.0"
+criterion = {version = "0.4.0", features = ["html_reports"]}
+rand = "0.8.5"
 
 [features]
 default = []
@@ -59,3 +61,13 @@ required-features = ["redact-json"]
 name = "redaction_string_with_info"
 path = "examples/redaction_string_with_info.rs"
 required-features = ["redact-info"]
+
+[[bench]]
+name = "redact_str"
+harness = false
+required-features = ["redact-info"]
+
+[[bench]]
+name = "redact_json"
+harness = false
+required-features = ["redact-json"]

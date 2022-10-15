@@ -3,7 +3,7 @@ use serde_json::json;
 use text_redaction::Redaction;
 
 fn main() {
-    let redaction = Redaction::new().add_path("a.b.*").add_path("a.foo");
+    let redaction = Redaction::new().add_paths(vec!["a.b.*", "a.foo"]);
 
     let json = json!({
     "a": {

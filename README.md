@@ -26,73 +26,20 @@ let redaction = Redaction::new().add_value("foo")?;
 let redacted_string = redaction.redact_str(text);
 ```
 
-
 ## Example
-
 To see all code [example](./text-redaction/examples), run the command `cargo run --example`
 
-### Redact from regex pattern
 
-```rs
-use text_redaction::{Pattern, Redaction};
+# Benchmark test
 
-let text = "foo,bar";
-
-let pattern = Pattern {
-    test: Regex::new("(bar)").unwrap(),
-    group: 1,
-};
-
-let redaction = Redaction::new().add_pattern(pattern);
-let redacted_string = redaction.redact_str(text);
-```
-
-### Redact with mix
-```rs
-use text_redaction::{Pattern, Redaction};
-
-let text = "foo,bar,baz,extra";
-
-let pattern = vec![
-    Pattern {test: Regex::new("(bar)").unwrap(),group: 1},
-    Pattern {test: Regex::new("(bar)").unwrap(),group: 1},
-];
-let redaction = Redaction::new().add_patterns(pattern).add_values(vec!["baz", "extra"]);
-let redacted_string = redaction.redact_str(text);
-```
-
-### Redact from JSON
-```rs
-let json = json!({
-    "all-path": {
-        "b": {
-            "key": "redact_me",
-        },
-        "foo": "redact_me",
-        "key": "redact_me",
-    },
-    "specific-key": {
-        "b": {
-            "key": "skip-redaction",
-        },
-        "foo": "skip-redaction",
-        "key": "redact_me"
-    },
-    "key": "redact_me",
-    "skip": "skip-redaction",
-    "by-value": "bar",
-    "by-pattern": "redact-by-pattern",
-})
-.to_string();
-
-let redaction = Redaction::default()
-    .add_pattern(pattern)
-    .add_path("all-path.*")
-    .add_path("specific-key.key")
-    .add_key("key")
-    .add_value("bar");
-let redacted_json = redaction.redact_json(&json)
-```
+Redact type | function | Times | Size | Results
+--- | ---| --- | --- | --- 
+Text | add_patterns | 1,000 | 70 chars | 29.016 µs |
+Text | add_values | 1,000 | 70 chars | 27.881s µs |
+Text | redact_reader | 1,000 | 70 chars | 117.75 µs |
+Text | redact_str_with_info | 1,000 | 70 chars | 36.532 µs |
+JSON | add_keys | 1,000 | 15 keys | 8.5483 µs |
+JSON | add_paths | 1,000 | 15 keys | 7.0353 µs |
 
 # Contributing
 
