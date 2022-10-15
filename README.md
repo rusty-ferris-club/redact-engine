@@ -26,7 +26,6 @@ let redaction = Redaction::new().add_value("foo")?;
 let redacted_string = redaction.redact_str(text);
 ```
 
-## Example
 To see all code [example](./text-redaction/examples), run the command `cargo run --example`
 
 
