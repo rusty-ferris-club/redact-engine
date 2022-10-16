@@ -1,5 +1,5 @@
+use redact_engine::{Pattern, Redaction};
 use serde_derive::Deserialize;
-use text_redaction::{Pattern, Redaction};
 
 #[derive(Debug, Deserialize, Clone)]
 struct Config {

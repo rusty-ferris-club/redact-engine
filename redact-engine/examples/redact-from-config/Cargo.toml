@@ -6,7 +6,7 @@ edition = "2021"
 [workspace]
 
 [dependencies]
-text-redaction = {path = "../../"}
+redact-engine = {path = "../../"}
 serde = "1"
 serde_derive = "1"
 serde_yaml = "0.9"
