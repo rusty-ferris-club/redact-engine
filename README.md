@@ -1,4 +1,5 @@
 # redact-engine
+[![CI](https://github.com/rusty-ferris-club/redact-engine/actions/workflows/ci.yaml/badge.svg)](https://github.com/rusty-ferris-club/redact-engine/actions/workflows/ci.yaml)
 
 Protect confidentiality with dynamic redaction by replacing sensitive data from string or JSON format
 
