@@ -17,10 +17,7 @@ redact-engine = { version = "0.1.0" }
     - Prefix path
  - Redact logs (supporting [env_logger](./redact-engine//examples/logger/env-logger))
 
-### Supported features 
- - `redact-json` - Redact from JSON format
- - `redact-info` - Return redact capture information (position and pattern ID)
-
+## Example:
 ```rs
 use text_redaction::{Pattern, Redaction};
 
@@ -35,6 +32,9 @@ let redacted_string = redaction.redact_str(text);
 
 To see all code [example](./redact-engine/examples), run the command `cargo run --example`
 
+## Supported features 
+ - `redact-json` - Redact from JSON format
+ - `redact-info` - Return redact capture information (position and pattern ID)
 
 # Benchmark test
 
