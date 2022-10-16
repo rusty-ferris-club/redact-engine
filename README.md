@@ -1,12 +1,13 @@
-# text-redaction
+# redact-engine
 
-Redact engine with flexible configuration
+Protect confidentiality with dynamic redaction by replacing sensitive data from string or JSON format
+
 
 ## Usage
 Add this to Cargo.toml:
 ```toml
 [dependencies]
-text-redaction = { version = "0.1.0" }
+redact-engine = { version = "0.1.0" }
 ```
 
 ## Usecase
@@ -14,7 +15,7 @@ text-redaction = { version = "0.1.0" }
  - Redact JSON schema by providing
     - By key
     - Prefix path
- - Redact logs (supporting [env_logger](./text-redaction//examples/logger/env-logger))
+ - Redact logs (supporting [env_logger](./redact-engine//examples/logger/env-logger))
 
 ### Supported features 
  - `redact-json` - Redact from JSON format
@@ -32,7 +33,7 @@ let redacted_string = redaction.redact_str(text);
 // some string message that you want to redact: [TEXT_REDACTED],bar
 ```
 
-To see all code [example](./text-redaction/examples), run the command `cargo run --example`
+To see all code [example](./redact-engine/examples), run the command `cargo run --example`
 
 
 # Benchmark test
@@ -48,9 +49,9 @@ JSON | add_paths | 1,000 | 15 keys | 7.0353 µs |
 
 # Contributing
 
-We are accepting PRs. Feel free to [submit PRs](https://github.com/rusty-ferris-club/text-redaction/pulls).
+We are accepting PRs. Feel free to [submit PRs](https://github.com/rusty-ferris-club/redact-engine/pulls).
 
-To all [Contributors](https://github.com/rusty-ferris-club/text-redaction/graphs/contributors) - you make this happen, thanks!
+To all [Contributors](https://github.com/rusty-ferris-club/redact-engine/graphs/contributors) - you make this happen, thanks!
 
 [contributing guide](CONTRIBUTING.md)
 

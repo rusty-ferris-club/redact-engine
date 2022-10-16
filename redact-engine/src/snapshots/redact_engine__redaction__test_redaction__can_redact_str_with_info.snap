@@ -1,0 +1,19 @@
+---
+source: redact-engine/src/redaction.rs
+expression: redaction.redact_str_with_info(TEXT)
+---
+Info {
+    string: "foo,[TEXT_REDACTED],baz,extra",
+    captures: [
+        Captures {
+            text: "bar",
+            position: Some(
+                Position {
+                    line: 1,
+                    start_offset: 4,
+                    end_offset: 7,
+                },
+            ),
+        },
+    ],
+}

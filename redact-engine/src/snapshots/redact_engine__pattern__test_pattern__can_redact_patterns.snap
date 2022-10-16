@@ -1,0 +1,13 @@
+---
+source: redact-engine/src/pattern.rs
+expression: "redaction.redact_patterns(TEXT, false)"
+---
+Info {
+    string: "foo,[TEXT_REDACTED],baz,foo",
+    captures: [
+        Captures {
+            text: "bar",
+            position: None,
+        },
+    ],
+}

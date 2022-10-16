@@ -1,5 +1,0 @@
----
-source: text-redaction/src/redaction.rs
-expression: redaction.redact_str(TEXT)
----
-"foo,[HIDDEN_TEXT],baz,extra"

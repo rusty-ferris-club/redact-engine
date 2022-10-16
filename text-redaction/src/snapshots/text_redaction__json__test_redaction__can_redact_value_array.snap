@@ -1,8 +1,0 @@
----
-source: text-redaction/src/json.rs
-expression: array_value
----
-Array [
-    String("[TEXT_REDACTED]"),
-    String("[TEXT_REDACTED]"),
-]

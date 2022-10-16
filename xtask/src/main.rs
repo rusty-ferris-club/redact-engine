@@ -12,7 +12,7 @@ use fs_extra as fsx;
 use fsx::dir::CopyOptions;
 use glob::glob;
 
-const TEMPLATE_PROJECT_NAME: &str = "text-redaction";
+const TEMPLATE_PROJECT_NAME: &str = "redact-engine";
 
 #[allow(clippy::too_many_lines)]
 fn main() -> Result<(), anyhow::Error> {

@@ -1,0 +1,7 @@
+---
+source: redact-engine/src/json.rs
+expression: redact.redact_str(&json)
+---
+Ok(
+    "{\"a\":\"[TEXT_REDACTED]\",\"key\":\"skip-redaction1\"}",
+)
