@@ -1,0 +1,12 @@
+[package]
+name = "redact-from-config"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+
+[dependencies]
+text-redaction = {path = "../../"}
+serde = "1"
+serde_derive = "1"
+serde_yaml = "0.9"
