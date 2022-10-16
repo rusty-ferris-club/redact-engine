@@ -1,4 +1,5 @@
 //! **Redact text**
+//!
 //! Protect confidentiality with dynamic redaction by replacing sensitive data
 //! from string or JSON format
 //!
