@@ -1,0 +1,5 @@
+patterns:
+  - test: (foo)
+    group: 1
+  - test: (bar)
+    group: 1

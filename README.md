@@ -1,5 +1,7 @@
 # text-redaction
 
+Redact engine with flexible configuration
+
 ## Usage
 Add this to Cargo.toml:
 ```toml
@@ -12,18 +14,22 @@ text-redaction = { version = "0.1.0" }
  - Redact JSON schema by providing
     - By key
     - Prefix path
- - Integrate with [env_logger](./text-redaction//examples/logger/env-logger)
+ - Redact logs (supporting [env_logger](./text-redaction//examples/logger/env-logger))
 
-
-### Redact by specific value 
+### Supported features 
+ - `redact-json` - Redact from JSON format
+ - `redact-info` - Return redact capture information (position and pattern ID)
 
 ```rs
 use text_redaction::{Pattern, Redaction};
 
-let text = "foo,bar";
+let text = "some string message that you want to redact: foo,bar";
 
 let redaction = Redaction::new().add_value("foo")?;
 let redacted_string = redaction.redact_str(text);
+
+// println!("{}", redacted_string); 
+// some string message that you want to redact: [TEXT_REDACTED],bar
 ```
 
 To see all code [example](./text-redaction/examples), run the command `cargo run --example`
