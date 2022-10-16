@@ -1,5 +1,0 @@
----
-source: text-redaction/src/redaction.rs
-expression: "Redaction::new().add_value(\"foo\").unwrap().add_values(vec![\"bar\",\n                \"baz\"]).unwrap().redact_str(TEXT)"
----
-"[TEXT_REDACTED],[TEXT_REDACTED],[TEXT_REDACTED],extra"

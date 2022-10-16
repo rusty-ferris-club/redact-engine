@@ -1,0 +1,5 @@
+---
+source: redact-engine/src/redaction.rs
+expression: "Redaction::new().add_pattern(pattern).add_patterns(patterns).redact_str(TEXT)"
+---
+"[TEXT_REDACTED],[TEXT_REDACTED],[TEXT_REDACTED],extra"

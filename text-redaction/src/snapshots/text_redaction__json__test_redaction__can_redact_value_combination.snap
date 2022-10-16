@@ -1,7 +1,0 @@
----
-source: text-redaction/src/json.rs
-expression: redact.redact_str(&json)
----
-Ok(
-    "{\"bar\":{\"b\":{\"key\":\"[TEXT_REDACTED]\"},\"foo\":\"skip-redaction\",\"key\":\"[TEXT_REDACTED]\"},\"baz\":\"skip-redaction\",\"foo\":\"[TEXT_REDACTED]\",\"key\":\"[TEXT_REDACTED]\"}",
-)

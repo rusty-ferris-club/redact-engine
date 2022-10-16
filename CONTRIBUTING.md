@@ -1,6 +1,6 @@
-# Contributing code to text-redaction
+# Contributing code to redact-engine
 
-Everyone is welcome to contribute code to `text-redaction`, provided that they are willing to license their contributions under the same license as the project itself.
+Everyone is welcome to contribute code to `redact-engine`, provided that they are willing to license their contributions under the same license as the project itself.
 We follow a simple 'inbound=outbound' model for contributions: the act of submitting an 'inbound' contribution means that the contributor agrees to license the code under the same terms as the project's overall 'outbound' license - in this case, Apache Software License v2 (see [LICENSE](./LICENSE)).
 
 
@@ -23,7 +23,7 @@ Your PR must also:
 
 ## Tests
 
-In `text-redaction` we have few test suite flows that need to pass before merging to master.
+In `redact-engine` we have few test suite flows that need to pass before merging to master.
 - [unitest](#unitest)
 - [clippy](#clippy)
 - [rustfmt](#rustfmt)
@@ -63,7 +63,7 @@ A few code style options are set in the [`.rustfmt.toml`](./.rustfmt.toml) file,
 
 ## documentation
 
-Generate and open [text-redaction](https://github.com/rusty-ferris-club/text-redaction) to make sure that your documentation os current
+Generate and open [redact-engine](https://github.com/rusty-ferris-club/redact-engine) to make sure that your documentation os current
 
 ```bash
 cargo xtask docs-preview

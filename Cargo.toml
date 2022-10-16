@@ -1,2 +1,2 @@
 [workspace]
-members = ["text-redaction", "xtask"]
+members = ["redact-engine", "xtask"]

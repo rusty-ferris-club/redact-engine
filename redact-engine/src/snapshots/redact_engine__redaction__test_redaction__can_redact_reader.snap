@@ -1,0 +1,7 @@
+---
+source: redact-engine/src/redaction.rs
+expression: "redaction.redact_reader(File::open(file_path).unwrap())"
+---
+Ok(
+    "foo,[TEXT_REDACTED],baz,extra",
+)

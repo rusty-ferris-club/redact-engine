@@ -1,0 +1,14 @@
+---
+source: redact-engine/src/pattern.rs
+expression: "Redact::try_capture(TEXT, &Regex::new(\"(foo)\").unwrap(), 1, false)"
+---
+[
+    (
+        "foo",
+        None,
+    ),
+    (
+        "foo",
+        None,
+    ),
+]

@@ -1,0 +1,7 @@
+---
+source: redact-engine/src/redaction.rs
+expression: redaction.redact_json(&json)
+---
+Ok(
+    "{\"all-path\":\"[TEXT_REDACTED]\",\"by-pattern\":\"[TEXT_REDACTED]\",\"by-value\":\"[TEXT_REDACTED]\",\"key\":\"[TEXT_REDACTED]\",\"skip\":\"skip-redaction\",\"specific-key\":{\"b\":{\"key\":\"[TEXT_REDACTED]\"},\"foo\":\"skip-redaction\",\"key\":\"[TEXT_REDACTED]\"}}",
+)
