@@ -28,6 +28,8 @@ pub struct Info {
 pub struct Captures {
     /// the captured text
     pub text: String,
+    /// the match regex string
+    pub test: String,
     /// Position capture details
     pub position: Option<Position>,
 }

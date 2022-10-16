@@ -106,6 +106,7 @@ impl Redact {
                     .iter()
                     .map(|(finding_text, position)| Captures {
                         text: finding_text.to_string(),
+                        test: format!("{}", pattern.test),
                         position: position.clone(),
                     })
                     .collect::<Vec<_>>(),

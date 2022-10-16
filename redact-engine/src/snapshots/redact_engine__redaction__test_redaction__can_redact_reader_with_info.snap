@@ -8,6 +8,7 @@ Ok(
         captures: [
             Captures {
                 text: "bar",
+                test: "(bar)",
                 position: Some(
                     Position {
                         line: 1,
