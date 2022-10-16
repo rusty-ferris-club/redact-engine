@@ -7,10 +7,12 @@ Info {
     captures: [
         Captures {
             text: "bar",
+            test: "(bar)",
             position: None,
         },
         Captures {
             text: "foo",
+            test: "(baz),(foo)",
             position: None,
         },
     ],
