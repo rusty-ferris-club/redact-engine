@@ -1,9 +1,9 @@
 # redact-engine
+[![Crates.io](https://img.shields.io/crates/v/redact-engine?style=flat-square)](https://crates.io/crates/redact-engine)
 [![CI](https://github.com/rusty-ferris-club/redact-engine/actions/workflows/ci.yaml/badge.svg)](https://github.com/rusty-ferris-club/redact-engine/actions/workflows/ci.yaml)
 
 Protect confidentiality with dynamic redaction by replacing sensitive data from string or JSON format
-
-
+[API Docs](https://docs.rs/redact-engine/0.1.0/redact_engine)
 ## Usage
 Add this to Cargo.toml:
 ```toml
