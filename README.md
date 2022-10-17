@@ -8,7 +8,7 @@ Protect confidentiality with dynamic redaction by replacing sensitive data from 
 Add this to Cargo.toml:
 ```toml
 [dependencies]
-redact-engine = { version = "0.1.0" }
+redact-engine = { version = "0.1.1" }
 ```
 
 ## Usecase
