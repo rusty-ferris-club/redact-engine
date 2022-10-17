@@ -4,12 +4,12 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Elad Kaplan <kaplan.elad@gmail.com>"]
 license = "Apache-2.0"
-description = ""
+description = "Protect confidentiality with dynamic redaction by replacing sensitive data from string or JSON format"
 homepage = "https://github.com/rusty-ferris-club/redact-engine"
 repository = "https://github.com/rusty-ferris-club/redact-engine"
 documentation = "https://docs.rs/redact-engine/latest/redact-engine/"
 readme = "../README.md"
-keywords = []
+keywords = ["redact", "sensitive-data"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
