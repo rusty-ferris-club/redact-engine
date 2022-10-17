@@ -24,7 +24,7 @@ const JSON: &str = r#"
    "skip":"skip-redaction",
    "by-value":"bar",
    "by-pattern":"redact-by-pattern",
-   "sample": "value",
+   "sample": "value"
 }
 "#;
 
@@ -52,23 +52,10 @@ fn redact_json_benchmark(c: &mut Criterion) {
     let mut banch_group = c.benchmark_group("redact_json");
     banch_group.sample_size(1_000);
 
-    let patterns = vec![
-        Pattern {
-            test: Regex::new("(foo)").unwrap(),
-            group: 1,
-        },
-        Pattern {
-            test: Regex::new("(bar)").unwrap(),
-            group: 1,
-        },
-        Pattern {
-            test: Regex::new("(baz)").unwrap(),
-            group: 1,
-        },
-    ];
-
     let redaction_with_keys = get_redact_keys(100);
     let redaction_with_path = get_redact_path(100);
+
+    let json_value: serde_json::Value = serde_json::from_str(JSON).unwrap();
 
     banch_group.bench_function("redact_json_from_keys", |b| {
         b.iter(|| redaction_with_keys.redact_json(black_box(JSON)));
@@ -76,6 +63,10 @@ fn redact_json_benchmark(c: &mut Criterion) {
 
     banch_group.bench_function("redact_json_from_path", |b| {
         b.iter(|| redaction_with_path.redact_json(black_box(JSON)));
+    });
+
+    banch_group.bench_function("redact_json_from_serde_value", |b| {
+        b.iter(|| redaction_with_path.redact_json_value(black_box(&json_value)));
     });
 
     banch_group.finish();

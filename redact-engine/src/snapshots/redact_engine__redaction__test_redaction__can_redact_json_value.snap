@@ -1,0 +1,20 @@
+---
+source: redact-engine/src/redaction.rs
+expression: redaction.redact_json_value(&json)
+---
+Ok(
+    Object {
+        "all-path": String("[TEXT_REDACTED]"),
+        "by-pattern": String("[TEXT_REDACTED]"),
+        "by-value": String("[TEXT_REDACTED]"),
+        "key": String("[TEXT_REDACTED]"),
+        "skip": String("skip-redaction"),
+        "specific-key": Object {
+            "b": Object {
+                "key": String("[TEXT_REDACTED]"),
+            },
+            "foo": String("skip-redaction"),
+            "key": String("[TEXT_REDACTED]"),
+        },
+    },
+)

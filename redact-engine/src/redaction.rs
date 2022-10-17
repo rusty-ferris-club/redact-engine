@@ -288,6 +288,20 @@ impl Redaction {
     pub fn redact_json(&self, str: &str) -> Result<String> {
         self.json.redact_str(&self.redact_str(str))
     }
+
+    #[cfg(feature = "redact-json")]
+    /// Redact from serde Value.
+    ///
+    /// # Optional
+    /// When `redact-json` feature flag is enabled
+    ///
+    /// # Errors
+    /// return an error when the given str is not a JSON string
+    pub fn redact_json_value(&self, value: &serde_json::Value) -> Result<serde_json::Value> {
+        let redact_str = self.redact_str(&value.to_string());
+        let mut value: serde_json::Value = serde_json::from_str(&redact_str)?;
+        Ok(self.json.redact_from_value(&mut value))
+    }
 }
 
 #[cfg(test)]
@@ -456,5 +470,43 @@ mod test_redaction {
             .add_value("bar")
             .unwrap();
         assert_debug_snapshot!(redaction.redact_json(&json));
+    }
+
+    #[test]
+    #[cfg(feature = "redact-json")]
+    fn can_redact_json_value() {
+        let pattern = Pattern {
+            test: Regex::new("(redact-by-pattern)").unwrap(),
+            group: 1,
+        };
+
+        let json = json!({
+        "all-path": {
+            "b": {
+                "key": "redact_me",
+            },
+            "foo": "redact_me",
+            "key": "redact_me",
+        },
+        "specific-key": {
+            "b": {
+                "key": "skip-redaction",
+            },
+            "foo": "skip-redaction",
+            "key": "redact_me"
+        },
+        "key": "redact_me",
+        "skip": "skip-redaction",
+        "by-value": "bar",
+        "by-pattern": "redact-by-pattern",
+        });
+
+        let redaction = Redaction::default()
+            .add_pattern(pattern)
+            .add_paths(vec!["all-path.*", "specific-key.key"])
+            .add_keys(vec!["key"])
+            .add_value("bar")
+            .unwrap();
+        assert_debug_snapshot!(redaction.redact_json_value(&json));
     }
 }
