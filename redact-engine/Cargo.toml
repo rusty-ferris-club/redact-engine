@@ -58,6 +58,11 @@ path = "examples/redaction_json.rs"
 required-features = ["redact-json"]
 
 [[example]]
+name = "redaction_json_value"
+path = "examples/redaction_json_value.rs"
+required-features = ["redact-json"]
+
+[[example]]
 name = "redaction_string_with_info"
 path = "examples/redaction_string_with_info.rs"
 required-features = ["redact-info"]

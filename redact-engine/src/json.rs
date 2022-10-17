@@ -114,9 +114,14 @@ impl Redact {
     /// redact json str
     pub fn redact_str(&self, str: &str) -> Result<String> {
         let mut json_value: Value = serde_json::from_str(str)?;
-        // let start_path = String::new();
         self.redact_value(&mut json_value, String::new());
         Ok(json_value.to_string())
+    }
+
+    /// redact json Value
+    pub fn redact_from_value(&self, value: &mut Value) -> Value {
+        self.redact_value(value, String::new());
+        value.clone()
     }
 
     /// redact Value values

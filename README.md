@@ -47,6 +47,7 @@ Text | redact_reader | 1,000 | 70 chars | 117.75 µs |
 Text | redact_str_with_info | 1,000 | 70 chars | 36.532 µs |
 JSON | add_keys | 1,000 | 15 keys | 8.5483 µs |
 JSON | add_paths | 1,000 | 15 keys | 7.0353 µs |
+JSON | from_value | 1,000 | 15 keys | 8.7555 µs |
 
 # Contributing
 
