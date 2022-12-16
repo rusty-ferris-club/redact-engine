@@ -104,6 +104,7 @@ impl Redact {
             Some(
                 result
                     .iter()
+                    .filter(|(finding_text, _)| !finding_text.is_empty())
                     .map(|(finding_text, position)| Captures {
                         text: finding_text.to_string(),
                         test: format!("{}", pattern.test),
@@ -169,6 +170,16 @@ mod test_pattern {
         };
         let redaction = Redact::default().add_pattern(pattern);
         assert_debug_snapshot!(redaction.redact_patterns(TEXT, false));
+    }
+
+    #[test]
+    fn can_redact_patterns_empty_string() {
+        let pattern = Pattern {
+            test: Regex::new("(?i)CARGO_.*=(.*)").unwrap(),
+            group: 1,
+        };
+        let redaction = Redact::default().add_pattern(pattern);
+        assert_debug_snapshot!(redaction.redact_patterns("CARGO_PKG_DESCRIPTION=", false));
     }
 
     #[test]

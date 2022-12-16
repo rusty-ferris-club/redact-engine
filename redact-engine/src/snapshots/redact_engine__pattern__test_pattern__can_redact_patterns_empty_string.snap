@@ -1,0 +1,8 @@
+---
+source: redact-engine/src/pattern.rs
+expression: "redaction.redact_patterns(\"CARGO_PKG_DESCRIPTION=\", false)"
+---
+Info {
+    string: "CARGO_PKG_DESCRIPTION=",
+    captures: [],
+}
